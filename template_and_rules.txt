@@ -1,0 +1,10 @@
+Template {"NAME":"Air2","GPIO":[255,255,69,255,6,5,255,255,255,255,255,255,255],"FLAG":15,"BASE":18}
+
+rule1 on tele-HTU21#Temperature do DisplayText [z] endon
+      on tele-HTU21#Temperature do DisplayText [s1c1x0y0]T: %value%C endon
+      on tele-HTU21#Humidity do DisplayText [s1c1x64y0]H: %value%% endon
+      on tele-PMS5003#CF1 do DisplayText [s1c1x0y14]um1.0: %value% um/3 endon
+      on tele-PMS5003#CF2.5 do DisplayText [s1c1x0y26]um2.5: %value% um/3 endon
+      on tele-PMS5003#CF10 do DisplayText [s1c1x0y37]um10.: %value% um/3 endon
+      
+rule2 on tele-PMS5003#PB2.5 do DisplayText [s1c1x0y48]PM 2.5: %value% ppb endon
