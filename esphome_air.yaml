@@ -1,0 +1,68 @@
+esphome:
+  name: prototype_1
+  platform: ESP8266
+  board: d1_mini
+
+wifi:
+  ssid: ''
+  password: ''
+
+logger:
+  level: DEBUG
+
+ota:
+api:
+
+i2c:
+  sda: D2
+  scl: D1
+
+time:
+  - platform: homeassistant
+    id: esptime
+
+font:
+  - file: "amiko.ttf"
+    id: font1
+    size: 10
+  - file: "amiko.ttf"
+    id: font2
+    size: 14
+uart:
+  rx_pin: D4
+  baud_rate: 9600
+
+sensor:
+  - platform: pmsx003
+    type: PMSX003
+    pm_1_0:
+      id: pm_1
+      name: "Particulate Matter < 1.0µm Concentration"
+    pm_2_5:
+      id: pm_2_5
+      name: "Particulate Matter < 2.5µm Concentration"
+    pm_10_0:
+      id: pm_10
+      name: "Particulate Matter < 10.0µm Concentration"
+  - platform: htu21d
+    temperature:
+      id: prototype_temp
+      name: "Prototype Temperature"
+    humidity:
+      id: prototype_hum
+      name: "Prototype Room Humidity"
+    update_interval: 20s      
+display:
+  - platform: ssd1306_i2c
+    model: "SSD1306 128x64"
+    reset_pin: D0
+    address: 0x3C
+    #rotation: 180 
+    lambda: |-
+
+      it.strftime(64, 5, id(font1), TextAlign::CENTER, "%H:%M", id(esptime).now());
+      it.printf(0, 11, id(font1), TextAlign::LEFT, "T: %.1f C°", id(prototype_temp).state);
+      it.printf(128, 11, id(font1), TextAlign::RIGHT, "H: %.1f", id(prototype_hum).state);
+      it.printf(0, 25, id(font2), TextAlign::LEFT, "PM: 1.0 um %.0f", id(pm_1).state);
+      it.printf(0, 38, id(font2), TextAlign::LEFT, "PM: 2.5 um %.0f", id(pm_2_5).state);
+      it.printf(0, 50, id(font2), TextAlign::LEFT, "PM: 10. um %.0f", id(pm_10).state);
